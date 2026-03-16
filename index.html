@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html lang="it" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TypeScript Playground — testscript.info</title>
+<meta name="description" content="Playground TypeScript interattivo: esplora i tipi, generics, utility types e pattern avanzati direttamente nel browser.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="TypeScript Playground — testscript.info">
+<meta property="og:description" content="Playground TypeScript interattivo: esplora i tipi, generics, utility types e pattern avanzati.">
+<meta property="og:url" content="https://testscript.info/demo/typescript/">
+<meta property="og:image" content="https://testscript.info/img/cover-image_1080.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="TypeScript Playground — testscript.info">
+<meta name="twitter:description" content="Playground TypeScript interattivo: esplora i tipi, generics, utility types e pattern avanzati.">
+<meta name="twitter:image" content="https://testscript.info/img/cover-image_1080.jpg">
+<link rel="canonical" href="https://testscript.info/demo/typescript/">
+<link rel="icon" type="image/svg+xml" href="../favicon.svg">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"SoftwareSourceCode","name":"TypeScript Playground","programmingLanguage":"TypeScript","url":"https://testscript.info/demo/typescript/","isPartOf":{"@type":"WebSite","name":"testscript.info","url":"https://testscript.info"}}
+</script>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../shared/social.css">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+<style>
+:root{--bg:#0f172a;--surface:#1e293b;--surface-elevated:#283548;--border:rgba(255,255,255,.08);--text:#e2e8f0;--muted:#94a3b8;--accent:#3178c6;--accent-glow:rgba(49,120,198,.25);--success:#10b981;--error:#ef4444;--warning:#f59e0b}
+[data-theme="light"]{--bg:#f8fafc;--surface:#fff;--surface-elevated:#f1f5f9;--border:#e2e8f0;--text:#1e293b;--muted:#64748b;--accent-glow:rgba(49,120,198,.1)}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column}
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:.75rem 1.5rem;background:var(--surface);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100;backdrop-filter:blur(12px)}
+.brand{text-decoration:none;font-weight:700;font-size:1.1rem;color:var(--text)}
+.brand span{color:var(--accent)}
+.brand small{font-weight:400;color:var(--muted);font-size:.85rem}
+.controls{display:flex;gap:.5rem;align-items:center}
+.controls a,.controls button{background:var(--surface-elevated);color:var(--text);border:1px solid var(--border);padding:.4rem .75rem;border-radius:.5rem;cursor:pointer;text-decoration:none;font-size:.85rem;display:flex;align-items:center;gap:.35rem;transition:all .2s}
+.controls a:hover,.controls button:hover{border-color:var(--accent);color:var(--accent)}
+.main{flex:1;display:grid;grid-template-columns:250px 1fr;grid-template-rows:1fr auto;gap:0;overflow:hidden;height:calc(100vh - 53px)}
+.sidebar{background:var(--surface);border-right:1px solid var(--border);overflow-y:auto;padding:.75rem 0}
+.sidebar h3{padding:.5rem 1rem;font-size:.7rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
+.sidebar button{display:block;width:100%;text-align:left;padding:.5rem 1rem;border:none;background:transparent;color:var(--text);font-size:.85rem;cursor:pointer;transition:background .15s}
+.sidebar button:hover{background:var(--surface-elevated)}
+.sidebar button.active{background:var(--accent-glow);color:var(--accent);border-left:3px solid var(--accent)}
+.editor-area{display:flex;flex-direction:column;overflow:hidden}
+.editor-header{display:flex;justify-content:space-between;align-items:center;padding:.5rem 1rem;background:var(--surface);border-bottom:1px solid var(--border)}
+.editor-header h4{font-size:.85rem;color:var(--muted);font-weight:500}
+.editor-container{display:grid;grid-template-columns:1fr 1fr;flex:1;overflow:hidden}
+.code-panel{display:flex;flex-direction:column;overflow:hidden;border-right:1px solid var(--border)}
+.output-panel{display:flex;flex-direction:column;overflow:hidden}
+.panel-header{padding:.4rem .75rem;font-size:.7rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);background:var(--surface);border-bottom:1px solid var(--border)}
+textarea{flex:1;width:100%;border:none;background:var(--bg);color:var(--text);font-family:'JetBrains Mono',monospace;font-size:.9rem;padding:1rem;resize:none;outline:none;line-height:1.6;tab-size:2}
+.output{flex:1;overflow-y:auto;padding:1rem;font-family:'JetBrains Mono',monospace;font-size:.85rem;white-space:pre-wrap;line-height:1.6}
+.output .type-info{color:var(--accent);margin-bottom:.5rem}
+.output .comment{color:var(--muted);font-style:italic}
+.output .error{color:var(--error)}
+.output .success{color:var(--success)}
+.status-bar{display:flex;justify-content:space-between;padding:.35rem 1rem;font-size:.75rem;color:var(--muted);background:var(--surface);border-top:1px solid var(--border)}
+.btn-run{background:var(--accent)!important;color:#fff!important;border-color:var(--accent)!important;font-weight:600}
+.btn-run:hover{opacity:.9}
+@media(max-width:768px){
+  .main{grid-template-columns:1fr;height:auto;min-height:calc(100vh - 53px)}
+  .sidebar{display:none}
+  .editor-container{grid-template-columns:1fr;grid-template-rows:1fr 1fr}
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div><a href="../" class="brand">ts<span>.</span> <small>/ typescript</small></a></div>
+  <div class="controls">
+    <button class="btn-run" onclick="analyzeCode()"><i class="bi bi-play-fill"></i> Analizza</button>
+    <button onclick="copyCode()"><i class="bi bi-clipboard"></i></button>
+    <button class="theme-toggle" onclick="toggleTheme()"><i class="bi bi-sun-fill" id="themeIcon"></i></button>
+    <a href="../"><i class="bi bi-arrow-left"></i> Demo Hub</a>
+  </div>
+</div>
+
+<div class="main">
+  <div class="sidebar" id="sidebar">
+    <h3>Esempi Base</h3>
+    <button onclick="loadExample('basic-types')" class="active">Tipi Primitivi</button>
+    <button onclick="loadExample('interfaces')">Interfaces</button>
+    <button onclick="loadExample('type-guards')">Type Guards</button>
+    <h3>Generics</h3>
+    <button onclick="loadExample('generics')">Generics Base</button>
+    <button onclick="loadExample('constraints')">Constraints</button>
+    <h3>Utility Types</h3>
+    <button onclick="loadExample('utility')">Partial / Pick / Omit</button>
+    <button onclick="loadExample('mapped')">Mapped Types</button>
+    <h3>Pattern Avanzati</h3>
+    <button onclick="loadExample('discriminated')">Discriminated Unions</button>
+    <button onclick="loadExample('branded')">Branded Types</button>
+    <button onclick="loadExample('template-literal')">Template Literals</button>
+  </div>
+
+  <div class="editor-area">
+    <div class="editor-header">
+      <h4 id="exampleTitle">Tipi Primitivi</h4>
+      <span style="font-size:.75rem;color:var(--muted)" id="charCount">0 chars</span>
+    </div>
+    <div class="editor-container">
+      <div class="code-panel">
+        <div class="panel-header"><i class="bi bi-filetype-tsx"></i> TypeScript</div>
+        <textarea id="codeInput" spellcheck="false" oninput="updateCharCount()"></textarea>
+      </div>
+      <div class="output-panel">
+        <div class="panel-header"><i class="bi bi-info-circle"></i> Type Analysis</div>
+        <div class="output" id="output"></div>
+      </div>
+    </div>
+    <div class="status-bar">
+      <span>TypeScript Playground — testscript.info</span>
+      <span id="statusText">Pronto</span>
+    </div>
+  </div>
+</div>
+
+<div class="social-share" id="socialShare">
+  <a href="#" class="share-fb" onclick="shareOn('facebook')"><i class="bi bi-facebook"></i></a>
+  <a href="#" class="share-x" onclick="shareOn('x')"><i class="bi bi-twitter-x"></i></a>
+  <a href="#" class="share-li" onclick="shareOn('linkedin')"><i class="bi bi-linkedin"></i></a>
+  <a href="#" class="share-wa" onclick="shareOn('whatsapp')"><i class="bi bi-whatsapp"></i></a>
+  <a href="#" class="share-tg" onclick="shareOn('telegram')"><i class="bi bi-telegram"></i></a>
+</div>
+
+<script src="../shared/social.js"></script>
+<script>
+const examples = {
+  'basic-types': {
+    title: 'Tipi Primitivi',
+    code: `// Tipi primitivi in TypeScript
+let name: string = "Mario Rossi";
+let age: number = 30;
+let isActive: boolean = true;
+let scores: number[] = [95, 87, 92];
+
+// Tuple: array con tipi fissi per posizione
+let user: [string, number] = ["admin", 42];
+
+// Enum
+enum Role {
+  Admin = "ADMIN",
+  Editor = "EDITOR",
+  Viewer = "VIEWER"
+}
+
+let currentRole: Role = Role.Admin;
+
+// Union types
+type ID = string | number;
+let userId: ID = "abc-123";
+userId = 42; // OK: number è un tipo valido per ID
+
+// Type alias
+type Point = { x: number; y: number };
+const origin: Point = { x: 0, y: 0 };
+
+// Literal types
+type Direction = "up" | "down" | "left" | "right";
+let move: Direction = "up";`
+  },
+  'interfaces': {
+    title: 'Interfaces',
+    code: `// Interface per oggetti
+interface User {
+  id: number;
+  name: string;
+  email: string;
+  role: "admin" | "user";
+  avatar?: string; // opzionale
+  readonly createdAt: Date; // non modificabile
+}
+
+// Estensione di interface
+interface AdminUser extends User {
+  role: "admin";
+  permissions: string[];
+  lastLogin: Date;
+}
+
+// Interface per funzioni
+interface Formatter {
+  (value: unknown): string;
+}
+
+const jsonFormat: Formatter = (value) => JSON.stringify(value, null, 2);
+
+// Interface generica
+interface ApiResponse<T> {
+  success: boolean;
+  data: T;
+  message: string;
+  timestamp: number;
+}
+
+// Uso
+const response: ApiResponse<User[]> = {
+  success: true,
+  data: [],
+  message: "OK",
+  timestamp: Date.now()
+};`
+  },
+  'type-guards': {
+    title: 'Type Guards',
+    code: `// Type guard con typeof
+function formatValue(value: string | number): string {
+  if (typeof value === "string") {
+    return value.toUpperCase(); // TS sa che è string
+  }
+  return value.toFixed(2); // TS sa che è number
+}
+
+// Type guard con in
+interface Dog { bark(): void; breed: string; }
+interface Cat { meow(): void; color: string; }
+
+function makeSound(animal: Dog | Cat): string {
+  if ("bark" in animal) {
+    animal.bark(); // TS sa che è Dog
+    return "Woof!";
+  }
+  animal.meow(); // TS sa che è Cat
+  return "Meow!";
+}
+
+// Type guard personalizzato (type predicate)
+interface ApiError {
+  code: number;
+  message: string;
+}
+
+function isApiError(value: unknown): value is ApiError {
+  return (
+    typeof value === "object" &&
+    value !== null &&
+    "code" in value &&
+    "message" in value
+  );
+}
+
+// Uso del type predicate
+function handleResponse(res: unknown) {
+  if (isApiError(res)) {
+    console.error(res.code, res.message);
+  }
+}`
+  },
+  'generics': {
+    title: 'Generics Base',
+    code: `// Funzione generica
+function first<T>(arr: T[]): T | undefined {
+  return arr[0];
+}
+
+const num = first([1, 2, 3]);     // tipo: number | undefined
+const str = first(["a", "b"]);    // tipo: string | undefined
+
+// Classe generica
+class Stack<T> {
+  private items: T[] = [];
+
+  push(item: T): void {
+    this.items.push(item);
+  }
+
+  pop(): T | undefined {
+    return this.items.pop();
+  }
+
+  peek(): T | undefined {
+    return this.items[this.items.length - 1];
+  }
+
+  get size(): number {
+    return this.items.length;
+  }
+}
+
+const numberStack = new Stack<number>();
+numberStack.push(42);
+numberStack.push(100);
+
+// Generics con più parametri
+function merge<A, B>(obj1: A, obj2: B): A & B {
+  return { ...obj1, ...obj2 };
+}
+
+const result = merge(
+  { name: "Mario" },
+  { age: 30, role: "admin" }
+);
+// tipo: { name: string } & { age: number; role: string }`
+  },
+  'constraints': {
+    title: 'Generic Constraints',
+    code: `// Constraint con extends
+function getLength<T extends { length: number }>(item: T): number {
+  return item.length;
+}
+
+getLength("hello");     // OK: string ha length
+getLength([1, 2, 3]);   // OK: array ha length
+// getLength(42);        // Errore: number non ha length
+
+// Constraint con keyof
+function getProperty<T, K extends keyof T>(obj: T, key: K): T[K] {
+  return obj[key];
+}
+
+const user = { name: "Mario", age: 30, email: "m@test.it" };
+const name = getProperty(user, "name"); // tipo: string
+const age = getProperty(user, "age");   // tipo: number
+// getProperty(user, "phone");           // Errore!
+
+// Conditional type con constraint
+type IsArray<T> = T extends unknown[] ? true : false;
+
+type Test1 = IsArray<string[]>;  // true
+type Test2 = IsArray<number>;    // false
+
+// Factory con constraint
+interface Constructor<T> {
+  new (...args: unknown[]): T;
+}
+
+function create<T>(ctor: Constructor<T>): T {
+  return new ctor();
+}`
+  },
+  'utility': {
+    title: 'Utility Types',
+    code: `interface User {
+  id: number;
+  name: string;
+  email: string;
+  password: string;
+  avatar: string;
+  role: "admin" | "user";
+}
+
+// Partial<T> — tutti i campi opzionali
+type UpdateUser = Partial<User>;
+// { id?: number; name?: string; email?: string; ... }
+
+// Required<T> — tutti i campi obbligatori
+type StrictUser = Required<User>;
+
+// Pick<T, K> — seleziona solo alcuni campi
+type UserPreview = Pick<User, "id" | "name" | "avatar">;
+// { id: number; name: string; avatar: string }
+
+// Omit<T, K> — esclude alcuni campi
+type PublicUser = Omit<User, "password" | "email">;
+// { id: number; name: string; avatar: string; role: "admin" | "user" }
+
+// Record<K, V> — mappa chiavi a valori
+type UserRoles = Record<string, User["role"]>;
+// { [key: string]: "admin" | "user" }
+
+// Readonly<T> — immutabile
+type FrozenUser = Readonly<User>;
+
+// Exclude / Extract
+type Primitive = string | number | boolean | null;
+type NonNull = Exclude<Primitive, null>;
+// string | number | boolean
+
+// ReturnType
+function createUser() {
+  return { id: 1, name: "test", role: "user" as const };
+}
+type NewUser = ReturnType<typeof createUser>;
+// { id: number; name: string; role: "user" }`
+  },
+  'mapped': {
+    title: 'Mapped Types',
+    code: `// Mapped type base
+type Optional<T> = {
+  [K in keyof T]?: T[K];
+};
+
+// Readonly deep (ricorsivo)
+type DeepReadonly<T> = {
+  readonly [K in keyof T]: T[K] extends object
+    ? DeepReadonly<T[K]>
+    : T[K];
+};
+
+// Validation errors per ogni campo
+type ValidationErrors<T> = {
+  [K in keyof T]?: string[];
+};
+
+interface LoginForm {
+  email: string;
+  password: string;
+}
+
+const errors: ValidationErrors<LoginForm> = {
+  email: ["Email non valida", "Email già registrata"],
+  password: ["Minimo 8 caratteri"],
+};
+
+// Trasformazione chiavi
+type Getters<T> = {
+  [K in keyof T as \`get\${Capitalize<string & K>}\`]: () => T[K];
+};
+
+interface Config {
+  theme: string;
+  lang: string;
+}
+
+type ConfigGetters = Getters<Config>;
+// { getTheme: () => string; getLang: () => string }
+
+// Filtraggio per tipo
+type NumericKeys<T> = {
+  [K in keyof T]: T[K] extends number ? K : never;
+}[keyof T];
+
+interface Stats {
+  name: string;
+  score: number;
+  level: number;
+  active: boolean;
+}
+
+type NumKeys = NumericKeys<Stats>; // "score" | "level"`
+  },
+  'discriminated': {
+    title: 'Discriminated Unions',
+    code: `// State machine type-safe
+type AsyncState<T> =
+  | { status: "idle" }
+  | { status: "loading" }
+  | { status: "success"; data: T }
+  | { status: "error"; error: Error };
+
+// Exhaustive switch — il compiler verifica tutti i casi
+function render<T>(state: AsyncState<T>): string {
+  switch (state.status) {
+    case "idle":
+      return "In attesa dell'azione...";
+    case "loading":
+      return "Caricamento in corso...";
+    case "success":
+      return \`Dati: \${JSON.stringify(state.data)}\`;
+    case "error":
+      return \`Errore: \${state.error.message}\`;
+  }
+}
+
+// API Events
+type AppEvent =
+  | { type: "LOGIN"; payload: { email: string } }
+  | { type: "LOGOUT" }
+  | { type: "UPDATE_PROFILE"; payload: { name: string; avatar?: string } }
+  | { type: "DELETE_ACCOUNT"; payload: { confirmation: boolean } };
+
+function handleEvent(event: AppEvent): void {
+  switch (event.type) {
+    case "LOGIN":
+      console.log(\`Login: \${event.payload.email}\`);
+      break;
+    case "LOGOUT":
+      console.log("Logout");
+      break;
+    case "UPDATE_PROFILE":
+      console.log(\`Update: \${event.payload.name}\`);
+      break;
+    case "DELETE_ACCOUNT":
+      if (event.payload.confirmation) {
+        console.log("Account eliminato");
+      }
+      break;
+  }
+}`
+  },
+  'branded': {
+    title: 'Branded Types',
+    code: `// Branded types: previeni mix di ID diversi
+type Brand<T, B extends string> = T & { readonly __brand: B };
+
+type UserId = Brand<number, "UserId">;
+type PostId = Brand<number, "PostId">;
+type OrderId = Brand<string, "OrderId">;
+
+// Factory functions per creare branded values
+function userId(id: number): UserId {
+  return id as UserId;
+}
+function postId(id: number): PostId {
+  return id as PostId;
+}
+
+// Funzioni type-safe
+function getUser(id: UserId): string {
+  return \`User #\${id}\`;
+}
+function getPost(id: PostId): string {
+  return \`Post #\${id}\`;
+}
+
+const uid = userId(42);
+const pid = postId(99);
+
+getUser(uid);  // ✅ OK
+getPost(pid);  // ✅ OK
+// getUser(pid);  // ❌ Errore di tipo!
+// getPost(uid);  // ❌ Errore di tipo!
+
+// Branded type per validazione
+type Email = Brand<string, "Email">;
+type NonEmptyString = Brand<string, "NonEmptyString">;
+
+function validateEmail(input: string): Email | null {
+  const regex = /^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/;
+  return regex.test(input) ? (input as Email) : null;
+}
+
+function sendEmail(to: Email, subject: NonEmptyString): void {
+  console.log(\`Sending "\${subject}" to \${to}\`);
+}`
+  },
+  'template-literal': {
+    title: 'Template Literal Types',
+    code: `// Template literal types
+type HttpMethod = "GET" | "POST" | "PUT" | "DELETE";
+type ApiVersion = "v1" | "v2";
+
+// Combinazione automatica di stringhe
+type ApiRoute = \`/api/\${ApiVersion}/\${string}\`;
+
+const route1: ApiRoute = "/api/v1/posts";     // ✅
+const route2: ApiRoute = "/api/v2/users/42";  // ✅
+// const route3: ApiRoute = "/posts";          // ❌
+
+// Event handler types
+type DomEvent = "click" | "focus" | "blur" | "change";
+type EventHandler = \`on\${Capitalize<DomEvent>}\`;
+// "onClick" | "onFocus" | "onBlur" | "onChange"
+
+// CSS unit types
+type CSSUnit = "px" | "rem" | "em" | "%" | "vh" | "vw";
+type CSSValue = \`\${number}\${CSSUnit}\`;
+
+const width: CSSValue = "100px";      // ✅
+const height: CSSValue = "50vh";      // ✅
+// const bad: CSSValue = "auto";       // ❌
+
+// Getter/Setter automatici
+type PropAccessors<T extends string> = {
+  [K in T as \`get\${Capitalize<K>}\`]: () => unknown;
+} & {
+  [K in T as \`set\${Capitalize<K>}\`]: (value: unknown) => void;
+};
+
+type UserAccessors = PropAccessors<"name" | "email">;
+// {
+//   getName: () => unknown;
+//   setName: (value: unknown) => void;
+//   getEmail: () => unknown;
+//   setEmail: (value: unknown) => void;
+// }`
+  }
+};
+
+const codeInput = document.getElementById('codeInput');
+const output = document.getElementById('output');
+
+function loadExample(key) {
+  const ex = examples[key];
+  if (!ex) return;
+  codeInput.value = ex.code;
+  document.getElementById('exampleTitle').textContent = ex.title;
+  updateCharCount();
+  document.querySelectorAll('.sidebar button').forEach(b => b.classList.remove('active'));
+  event.target.classList.add('active');
+  analyzeCode();
+}
+
+function analyzeCode() {
+  const code = codeInput.value;
+  if (!code.trim()) { output.innerHTML = '<span class="comment">// Scrivi del codice TypeScript...</span>'; return; }
+  let html = '';
+  const typeDecl = code.match(/type\s+(\w+)(?:<[^>]+>)?\s*=\s*([^;]+)/g) || [];
+  const interfaces = code.match(/interface\s+(\w+)(?:\s+extends\s+\w+)?\s*\{/g) || [];
+  const functions = code.match(/function\s+(\w+)\s*(?:<[^>]+>)?\s*\(([^)]*)\)\s*(?::\s*([^{]+))?\s*\{/g) || [];
+  const variables = code.match(/(const|let|var)\s+(\w+)\s*:\s*([^=;]+)/g) || [];
+  const enums = code.match(/enum\s+(\w+)\s*\{/g) || [];
+  const classes = code.match(/class\s+(\w+)(?:<[^>]+>)?(?:\s+extends\s+\w+)?\s*\{/g) || [];
+
+  if (typeDecl.length > 0) {
+    html += '<span class="type-info">📦 Type Aliases:</span>\n';
+    typeDecl.forEach(t => { html += '  <span class="success">' + escapeHtml(t.trim()) + '</span>\n'; });
+    html += '\n';
+  }
+  if (interfaces.length > 0) {
+    html += '<span class="type-info">🔷 Interfaces:</span>\n';
+    interfaces.forEach(i => { html += '  <span class="success">' + escapeHtml(i.replace('{','').trim()) + '</span>\n'; });
+    html += '\n';
+  }
+  if (enums.length > 0) {
+    html += '<span class="type-info">📋 Enums:</span>\n';
+    enums.forEach(e => { html += '  <span class="success">' + escapeHtml(e.replace('{','').trim()) + '</span>\n'; });
+    html += '\n';
+  }
+  if (classes.length > 0) {
+    html += '<span class="type-info">🏗️ Classes:</span>\n';
+    classes.forEach(c => { html += '  <span class="success">' + escapeHtml(c.replace('{','').trim()) + '</span>\n'; });
+    html += '\n';
+  }
+  if (functions.length > 0) {
+    html += '<span class="type-info">⚡ Functions:</span>\n';
+    functions.forEach(f => {
+      const m = f.match(/function\s+(\w+)\s*(?:<([^>]+)>)?\s*\(([^)]*)\)\s*(?::\s*(.+))?\s*\{/);
+      if (m) {
+        const gen = m[2] ? '<'+m[2]+'>' : '';
+        const ret = m[4] ? m[4].trim() : 'void (inferred)';
+        html += '  <span class="success">' + escapeHtml(m[1]) + gen + '(' + escapeHtml(m[3].trim()) + ')</span>\n';
+        html += '    <span class="comment">→ returns: ' + escapeHtml(ret) + '</span>\n';
+      }
+    });
+    html += '\n';
+  }
+  if (variables.length > 0) {
+    html += '<span class="type-info">📌 Variables:</span>\n';
+    variables.forEach(v => { html += '  <span class="success">' + escapeHtml(v.trim()) + '</span>\n'; });
+    html += '\n';
+  }
+
+  const errors = [];
+  if (code.includes('any')) errors.push('⚠️ Uso di "any" rilevato — preferire unknown o tipi espliciti');
+  if (code.match(/as\s+\w+/)) errors.push('ℹ️ Type assertion (as) rilevata — verificare che sia necessaria');
+  if (code.includes('!.') || code.includes('!;')) errors.push('⚠️ Non-null assertion (!) — considerare optional chaining (?.)');
+
+  if (errors.length > 0) {
+    html += '<span class="type-info">🔍 Lint Hints:</span>\n';
+    errors.forEach(e => html += '  <span class="warning" style="color:var(--warning)">' + e + '</span>\n');
+  }
+
+  const summary = `\n<span class="comment">// Riepilogo: ${typeDecl.length} types, ${interfaces.length} interfaces, ${functions.length} functions, ${variables.length} variables</span>`;
+  html += summary;
+  output.innerHTML = html;
+  document.getElementById('statusText').textContent = 'Analisi completata';
+}
+
+function escapeHtml(str) {
+  return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function updateCharCount() {
+  document.getElementById('charCount').textContent = codeInput.value.length + ' chars';
+}
+
+function copyCode() {
+  navigator.clipboard.writeText(codeInput.value).then(() => {
+    document.getElementById('statusText').textContent = 'Copiato negli appunti!';
+    setTimeout(() => document.getElementById('statusText').textContent = 'Pronto', 2000);
+  });
+}
+
+function toggleTheme() {
+  const html = document.documentElement;
+  const next = html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+  html.setAttribute('data-theme', next);
+  document.getElementById('themeIcon').className = next === 'dark' ? 'bi bi-sun-fill' : 'bi bi-moon-stars-fill';
+  localStorage.setItem('demo_theme', next);
+}
+(() => {
+  const s = localStorage.getItem('demo_theme');
+  if (s) { document.documentElement.setAttribute('data-theme', s); document.getElementById('themeIcon').className = s === 'dark' ? 'bi bi-sun-fill' : 'bi bi-moon-stars-fill'; }
+})();
+
+loadExample('basic-types');
+</script>
+</body>
+</html>
